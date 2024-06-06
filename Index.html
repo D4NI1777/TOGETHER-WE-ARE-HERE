@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+
+body {
+
+ display: flex;
+
+ align-items: center;
+
+ justify-content: center;
+
+ flex-direction: column;
+
+ font-family: "DM Serif Text", serif;
+
+}
+
+.dm-serif-text-regular {
+
+  font-family: "DM Serif Text", serif;
+
+  font-weight: 400;
+
+  font-style: normal;
+
+}
+
+.dm-serif-text-regular-italic {
+
+  font-family: "DM Serif Text", serif;
+
+  font-weight: 400;
+
+  font-style: italic;
+
+}
+
+.container {
+
+ display: flex;
+
+ width: 100%;
+
+ justify-content: space-evenly;
+
+}
+
+.crossword {
+
+ display: grid;
+
+ grid-template-rows: repeat(10, 60px);
+
+}
+
+.row {
+
+ display: grid;
+
+ grid-template-columns: repeat(10, 60px);
+
+ box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+
+}
+
+.cell {
+
+ width: 60px;
+
+ height: 60px;
+
+ background-color: white;
+
+ border: 1px solid #710000;
+
+}
+
+.unused {
+
+ outline: none;
+
+ background-color: #710000;
+
+}
+
+h1 {
+
+ text-align: center;
+
+ color: black;
+
+ font-size: 2.2rem;
+
+}
+
+.number {
+
+ position: relative;
+
+ font-weight: 300;
+
+ color: #000;
+
+ bottom: 60px;
+
+ left: 3px;
+
+ z-index: 10;
+
+}
+
+input:focus {
+
+ outline: none;
+
+ background-color: #ffd6d6;
+
+ width: 50.5px;
+
+ height: 50.5px;
+
+}
+
+input {
+
+ display: block;
+
+ position: relative;
+
+ font-size: 20px;
+
+ text-align: center;
+
+ height: 60px;
+
+ width: 60px;
+
+ background-color: transparent;
+
+ border: 0px solid;
+
+ z-index: 1;
+
+}
+
+.questions {
+
+ max-width: 40%;
+
+}
+
+h2 {
+
+ font-size: 2rem;
+
+ color: black;
+
+ text-align: center;
+
+}
+
+#questionsList {
+
+ line-height: 30px;
+
+ font-size: 15px;
+
+}
+
+#questionsList li {
+
+ text-align: left;
+
+ list-style-position: inside;
+
+}
+
+button {
+
+ display: block;
+
+ margin: 0 auto;
+
+ padding: 1rem;
+
+ background-color: white;
+
+ color: black;
+
+ border-radius: 5px;
+
+ border: 2px black solid transparent;
+
+}
+
+img {
+
+ display: flex;
+
+ flex-wrap: wrap;  
+
+ margin: 1.5rem;
+
+}
+
+button:hover~#answers {
+
+ visibility: visible;
+
+}
+
+button:hover {
+
+ background-color: #000;
+
+ border: 2px solid red;
+
+ color: white;
+
+ cursor: pointer;
+
+ transition: all .2s ease;
+
+}
+
+@media screen and (max-width:980px) {
+
+ .container {
+
+ flex-direction: column;
+
+ align-items: center;
+
+ }
+
+ .crossword {
+
+ display: grid;
+
+ grid-template-rows: repeat(10, 40px);
+
+ }
+
+ .row {
+
+ display: grid;
+
+ grid-template-columns: repeat(10, 40px);
+
+ }
+
+ .cell {
+
+ width: 40px;
+
+ height: 40px;
+
+ }
+
+ input {
+
+ width: 40px;
+
+ height: 40px;
+
+ font-size: 1rem;
+
+ }
+
+ input:focus {
+
+ height: 40px;
+
+ width: 40px;
+
+ }
+
+ .number {
+
+ bottom: 47px;
+
+ font-size: .8rem;
+
+ }
+
+ .questions {
+
+ max-width: 100%;
+
+ }
+
+}
+
+@media screen and (max-width:480px) {
+
+ .container {
+
+ flex-direction: column;
+
+ align-items: center;
+
+ }
+
+ .crossword {
+
+ display: grid;
+
+ grid-template-rows: repeat(10, 30px);
+
+ }
+
+ .row {
+
+ display: grid;
+
+ grid-template-columns: repeat(10, 30px);
+
+ }
+
+ .cell {
+
+ width: 30px;
+
+ height: 30px;
+
+ }
+
+ ol {
+
+ line-height: 2rem;
+
+ font-size: 1rem;
+
+ }
+
+ input {
+
+ width: 30px;
+
+ height: 30px;
+
+ font-size: .7rem;
+
+ }
+
+ input:focus {
+
+ height: 30px;
+
+ width: 30px;
+
+ }
+
+ .number {
+
+ bottom: 37px;
+
+ font-size: .7rem;
+
+ }
+
+ .questions {
+
+ max-width: 100%;
+
+ }
+
+}
+
+</style>
+
+<head>
+
+ <meta charset="UTF-8">
+
+ <meta name="viewport"
+
+ content="width=device-width,
+
+ initial-scale=1.0">
+
+ <link rel="stylesheet"
+
+ href="style.css">
+
+ <title>CROSSWORD</title>
+
+</head>
+
+<body>
+
+ <h1>答え</h1>
+
+ <div class="container">
+
+ <div class="crossword">
+
+ <div class="row">
+
+ <div class="cell unused"></div>
+
+ <div class="cell">
+
+ <input type="text" maxlength="1">
+
+ <span class="number">1</span>
+
+ </div>
+
+ <div class="cell">
+
+ <input type="text" maxlength="1">
+
+ </div>
+
+ <div class="cell">
+
+ <input type="text" maxlength="1">
+
+ </div>
+
+ <div class="cell">
+
+ <input type="text" maxlength="1">
+
+ </div>
+
+ <div class="cell">
+
+ <input type="text" maxlength="1">
+
+ <span class="number">9</span>
+
+ </div>
+
+ <div class="cell">
+
+ <input type="text" maxlength="1">
+
+ </div>
+
+ <div class="cell">
+
+ <input type="text" maxlength="1">
+
+ </div>
+
+ <div class="cell">
+
+ <input type="text" maxlength="1">
+
+ </div>
+
+ <div class="cell">
+
+<input type="text" maxlength="1">
+
+<span class="number">5</span>
+
+</div>
+
+ </div>
+
+ <div class="row">
+
+ <div class="cell">
+
+<input type="text" maxlength="1">
+
+<span class="number">8</span>
+
+</div>
+
+ <div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="row">
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+<span class="number">7</span>
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<cell class="row">
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+<span class="number">6</span>
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<cell class="row">
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<cell class="row">
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+<span class="number">3</span>
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<cell class="row">
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<cell class="row">
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+<span class="number">2</span>
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<cell class="row">
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+<span class="number">4</span>
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<cell class="row">
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<cell class="row">
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+<div class="cell unused"> </div>
+
+<div class="cell">
+
+<input type="text" maxlength="1">
+
+</div>
+
+<div class="cell unused"> </div>
+
+ </div>
+
+ </div>
+
+ </div>
+
+ <div class="questions">
+
+ <h2>ANSWER.</h2>
+
+ <ol id="questionsList">
+
+ <li>I have the strings of silk, My body covered with skin I emit such a noise that goes well with the lute.</li>
+
+ <li>Flowing and curving, you’ll follow my path, but look for the exit or face my wrath. What am I?</li>
+
+ <li>You hear my sound, you feel my presence, but you cannot see my body.</li>
+
+ <li>I may seem contradictory, but in philosophy, I'm a curiosity. The devoid of time and space.</li>
+
+ <li>I am often sought after for insight, though I'm not always in sight for many. But I always seek.</li>
+
+ <li>Your existence, the start of your origins, all began because of me.</li>
+
+ <li>In times of war, I am greatly sought, but in times of peace, I am rejected. What am I?</li>
+
+ <li>I am the seed known to be vile but for such good deeds always leads to corrupt.</li>
+
+ <li>A fate that was never meant to be seen.</li>
+
+ </ol>
+
+ </div>
+
+ </div>
+
+ <button> Submit </button>
+
+ <a href="" target="_blank"><img src=""/> </a>
+
+ <body>
+
+</html>
+
